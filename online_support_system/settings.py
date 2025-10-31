@@ -156,7 +156,9 @@ EMAIL_HOST_PASSWORD="smil lhoc ezmt uezh"
 # FONTEND_URL setup
 
 
-FONTEND_URL = 'https://student-support-system-rjio.onrender.com'
+
 
 # FONTEND_URL = 'http://127.0.0.1:8000'
 # >>>>>>> 138aa4e (online pg Admin setup)
+
+FONTEND_URL = 'https://student-support-system-rjio.onrender.com'
