@@ -76,13 +76,21 @@ WSGI_APPLICATION = 'online_support_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+import dj_database_url
+# Online Onrender.com pg database connect
+DATABASES = {
+    'default': dj_database_url.config(
+        default="postgresql://onlinesupportsystem_user:uBg0ty9bUqlkERRvahPw3aRyTGohJ8Zn@dpg-d42h7ibuibrs73dvlii0-a.singapore-postgres.render.com/onlinesupportsystem",
+        conn_max_age=600
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -147,4 +155,8 @@ EMAIL_HOST_PASSWORD="smil lhoc ezmt uezh"
 
 # FONTEND_URL setup
 
+
 FONTEND_URL = 'https://student-support-system-rjio.onrender.com'
+
+# FONTEND_URL = 'http://127.0.0.1:8000'
+# >>>>>>> 138aa4e (online pg Admin setup)
