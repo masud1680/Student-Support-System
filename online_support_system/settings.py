@@ -90,7 +90,7 @@ DATABASES = {
         default="postgresql://onlinesupportsystem_user:uBg0ty9bUqlkERRvahPw3aRyTGohJ8Zn@dpg-d42h7ibuibrs73dvlii0-a.singapore-postgres.render.com/onlinesupportsystem",
         conn_max_age=600
     )
-}
+} 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
