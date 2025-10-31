@@ -147,4 +147,4 @@ EMAIL_HOST_PASSWORD="smil lhoc ezmt uezh"
 
 # FONTEND_URL setup
 
-FONTEND_URL = "http://127.0.0.1:8000/"
+FONTEND_URL = ['https://*.onrender.com', 'http://127.0.0.1:8000']
