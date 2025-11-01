@@ -1,0 +1,138 @@
+{% extends "support/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+
+<div id="waiting-queue" class="bg-white p-4 rounded shadow mb-4"></div>
+<div id="in-progress-queue" class="bg-white p-4 rounded shadow"></div>
+<div id="ticket-info" class="bg-white p-4 rounded shadow"></div>
+
+
+<!-- STUDENT DASHBOARD -->
+{% if not is_teacher %}
+<div class="max-w-md mx-auto bg-white shadow rounded-lg p-6 fade-in">
+    <h2 class="text-xl font-semibold mb-4 text-yellow-600">Your Ticket Status</h2>
+    <div id="ticket-info" class="bg-gray-50 p-4 rounded shadow">
+        <p>Loading ticket info...</p>
+    </div>
+</div>
+
+<script>
+async function updateStudentQueue() {
+    const response = await fetch("{% url 'live_queue_status' %}");
+    const data = await response.json();
+    const container = document.getElementById('ticket-info');
+
+    if (!data.ticket) {
+        container.innerHTML = '<p>No active ticket. <a href="{% url "support" %}" class="text-blue-600 underline">Create one</a></p>';
+        return;
+    }
+
+    const t = data.ticket;
+    let statusText = t.status === 'waiting' ? '🕒 Waiting' : t.status === 'in_progress' ? '🎥 In Progress' : '✅ Completed';
+    let positionText = t.status === 'waiting' ? `<p>Students ahead: <strong>${t.position}</strong></p>` : '';
+    let meetingLink = '';
+    if(t.status === 'in_progress' && t.meeting_link){
+        let minutes = Math.floor(t.time_left/60);
+        let seconds = t.time_left % 60;
+        meetingLink = `<a href="${t.meeting_link}" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all">Join Meeting</a>
+        <p class="mt-2">Time left: <span id="countdown">${minutes}:${seconds.toString().padStart(2,'0')}</span></p>`;
+    }
+
+    container.innerHTML = `
+        <p><strong>Serial Number:</strong> #${t.serial_number}</p>
+        <p><strong>Status:</strong> ${statusText}</p>
+        ${positionText}
+        <div class="mt-2">${meetingLink}</div>
+    `;
+
+    if(t.status === 'in_progress' && t.time_left>0){
+        const countdownEl = document.getElementById('countdown');
+        let remaining = t.time_left;
+        clearInterval(window.countdownInterval);
+        window.countdownInterval = setInterval(()=>{
+            remaining--;
+            if(remaining<=0){ clearInterval(window.countdownInterval); countdownEl.innerText="0:00"; }
+            else{
+                let m=Math.floor(remaining/60); let s=remaining%60;
+                countdownEl.innerText=`${m}:${s.toString().padStart(2,'0')}`;
+            }
+        },1000);
+    }
+}
+
+setInterval(updateStudentQueue, 5000);
+updateStudentQueue();
+</script>
+{% endif %}
+
+<!-- TEACHER DASHBOARD -->
+{% if is_teacher %}
+<div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-white shadow rounded-lg p-4 fade-in">
+        <h2 class="text-xl font-semibold mb-4 text-yellow-600">Waiting Tickets</h2>
+        <div id="waiting-queue">
+            <p>Loading waiting tickets...</p>
+        </div>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-4 fade-in">
+        <h2 class="text-xl font-semibold mb-4 text-green-600">In Progress Meetings</h2>
+        <div id="in-progress-queue">
+            <p>Loading in-progress meetings...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+async function updateTeacherQueue(){
+    const response = await fetch("{% url 'live_queue_status' %}");
+    const data = await response.json();
+    const waitingContainer = document.getElementById('waiting-queue');
+    const inProgressContainer = document.getElementById('in-progress-queue');
+
+    waitingContainer.innerHTML='';
+    if(data.waiting_tickets.length===0){
+        waitingContainer.innerHTML='<p class="text-gray-500">No waiting tickets.</p>';
+    }else{
+        data.waiting_tickets.forEach((t,idx)=>{
+            const div=document.createElement('div');
+            div.className='border p-3 mb-3 rounded transition-all '+(idx===0?'bg-yellow-100':'bg-gray-50 fade-in');
+            div.innerHTML=`<p><strong>#${t.serial_number} - ${t.title}</strong> by ${t.student}</p>
+            <form method="POST" class="mt-2">{% csrf_token %}
+                <input type="hidden" name="ticket_id" value="${t.id}">
+                <button name="action" value="start_meeting" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-all">Start Meeting</button>
+            </form>`;
+            waitingContainer.appendChild(div);
+        });
+    }
+
+    inProgressContainer.innerHTML='';
+    if(data.in_progress.length===0){
+        inProgressContainer.innerHTML='<p class="text-gray-500">No active meetings.</p>';
+    }else{
+        data.in_progress.forEach((t)=>{
+            const div=document.createElement('div');
+            div.className='border p-3 mb-3 rounded bg-blue-100 fade-in';
+            let minutes=Math.floor(t.time_left/60); let seconds=t.time_left%60;
+            div.innerHTML=`<p><strong>#${t.serial_number} - ${t.title}</strong> by ${t.student}</p>
+                <p>Meeting Link: <a href="${t.meeting_link}" target="_blank" class="text-blue-700 underline">${t.meeting_link}</a></p>
+                <p>Time left: <span>${minutes}:${seconds.toString().padStart(2,'0')}</span></p>
+                <form method="POST" class="mt-2">{% csrf_token %}
+                    <input type="hidden" name="ticket_id" value="${t.id}">
+                    <button name="action" value="complete_meeting" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-all">Mark Completed</button>
+                </form>`;
+            inProgressContainer.appendChild(div);
+        });
+    }
+}
+setInterval(updateTeacherQueue,5000);
+updateTeacherQueue();
+</script>
+
+
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "support/base.html" %}
+{% block title %}Create Support Ticket{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto bg-white shadow rounded-lg p-6 animate-fadeIn">
+    <h2 class="text-2xl font-bold mb-4 text-blue-600">Create a Support Ticket</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-all">Submit Ticket</button>
+    </form>
+</div>
+{% endblock %}

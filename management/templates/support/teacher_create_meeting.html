@@ -1,0 +1,30 @@
+{% extends 'support/base.html' %}
+{% block title %}Create Meeting{% endblock %}
+
+{% block content %}
+<div class="fade-in max-w-2xl mx-auto bg-white p-6 rounded shadow">
+  <h2 class="text-xl font-bold mb-4">Create New Meeting</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="mb-4">
+      <label class="block font-medium">Title</label>
+      <input type="text" name="title" class="w-full border rounded p-2" required>
+    </div>
+    <div class="mb-4">
+      <label class="block font-medium">Meeting Link</label>
+      <input type="url" name="meeting_link" class="w-full border rounded p-2" required>
+    </div>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="block font-medium">Start Time</label>
+        <input type="datetime-local" name="start_time" class="w-full border rounded p-2" required>
+      </div>
+      <div>
+        <label class="block font-medium">End Time</label>
+        <input type="datetime-local" name="end_time" class="w-full border rounded p-2" required>
+      </div>
+    </div>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Create Meeting</button>
+  </form>
+</div>
+{% endblock %}

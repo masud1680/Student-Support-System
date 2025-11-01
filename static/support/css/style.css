@@ -1,0 +1,33 @@
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-10px);}
+    100% { opacity: 1; transform: translateY(0);}
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Hover animations */
+.hover-scale:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+/* Ticket highlight */
+.next-ticket {
+    background-color: #FEF3C7; /* Tailwind yellow-100 */
+    transition: background-color 0.5s ease;
+}
+
+/* Countdown text */
+.countdown {
+    font-weight: bold;
+    color: #DC2626; /* red-600 */
+}
+
+/* Smooth shadow transition */
+.shadow-hover:hover {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    transition: box-shadow 0.3s ease;
+}

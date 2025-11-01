@@ -1,0 +1,31 @@
+{% extends 'support/base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+  <h2 class="text-2xl font-semibold mb-4">Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
+
+  <div class="grid md:grid-cols-2 gap-4">
+
+    {% for meeting in active_meetings %}
+    <div class="bg-white p-4 rounded shadow hover:shadow-lg transition">
+      <h3 class="text-lg font-bold">{{ meeting.title }}</h3>
+      <p>Teacher: {{ meeting.teacher.first_name }} {{ meeting.teacher.last_name }}</p>
+      <p>Start: {{ meeting.start_time|date:"M d, Y H:i" }}</p>
+      <p>Duration: {{ meeting.duration }} mins</p>
+
+      <div class="mt-3 space-x-2">
+        {% if active_meetings %}
+          <a href="{% url 'create_ticket' meeting.id %}" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Create Ticket</a>
+        {% else %}
+          <span class="text-gray-500 text-sm">You already have an active ticket.</span>
+        {% endif %}
+        <a href="{{ meeting.meeting_link }}" target="_blank" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Join Meeting</a>
+      </div>
+    </div>
+    {% empty %}
+    <p>No active meetings right now.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

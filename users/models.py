@@ -12,4 +12,3 @@ class PasswordReset(models.Model):
     def __str__(self):
         return f"Password reset for {self.user.username} at {self.created_when}"
     
-

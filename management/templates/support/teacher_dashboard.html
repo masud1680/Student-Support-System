@@ -1,0 +1,32 @@
+{% extends 'support/base.html' %}
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+  <h2 class="text-2xl font-semibold mb-4">Welcome, {{ user.username }}</h2>
+  
+  <div class="grid md:grid-cols-3 gap-4">
+    {% for meeting in meetings %}
+    <div class="p-4 bg-white rounded shadow hover:shadow-lg transition-all">
+      <h3 class="text-lg font-bold">{{ meeting.title }}</h3>
+      <p>Start: {{ meeting.created_at|date:"M d, Y H:i" }}</p>
+      <p>End: {{ meeting.endTime|date:"M d, Y H:i" }}</p>
+      <p>Status: 
+        <span class="{% if meeting.status == 'active' %}text-green-600{% elif meeting.status == 'stopped' %}text-red-600{% else %}text-yellow-600{% endif %}">
+          {{ meeting.status }}
+        </span>
+      </p>
+      <div class="mt-3 space-x-2">
+        <a href="{% url 'manage_tickets' meeting.id %}" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition">Manage</a>
+        <a href="{% url 'update_meeting' meeting.id %}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">Edit</a>
+        {% if meeting.status != 'stopped' %}
+          <a href="{% url 'stop_meeting' meeting.id %}" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition">Stop</a>
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <p>No meetings found.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

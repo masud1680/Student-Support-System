@@ -83,6 +83,17 @@ WSGI_APPLICATION = 'online_support_system.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#       'default': {
+#           'ENGINE': 'django.db.backends.postgresql',
+#           'NAME': 'online_support_system',  # Name of your PostgreSQL database
+#           'USER': 'postgres',      # PostgreSQL username
+#           'PASSWORD': '1234',  # PostgreSQL password
+#           'HOST': 'localhost',          # Or the IP/hostname if remote
+#           'PORT': '5432',               # Default PostgreSQL port
+#       }
+#   }
+
 import dj_database_url
 # Online Onrender.com pg database connect
 DATABASES = {

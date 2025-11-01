@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Online Support{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.7s ease-in-out; }
+        @keyframes fadeIn { from { opacity:0; transform: translateY(10px);} to {opacity:1; transform:translateY(0);} }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Online Support System</h1>
+            <div>
+                <span class="mr-4">Hello, {{ user.username }}</span>
+                <a href="{% url 'logout' %}" class="bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition-all">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow h-screen sticky top-0 hidden md:block">
+            <nav class="flex flex-col p-4 space-y-2">
+                {% if user.is_staff %}
+                    <a href="{% url 'teacher_dashboard' %}" class="px-3 py-2 rounded hover:bg-blue-100 transition-all {% if request.path == '/support/teacher/' %}bg-blue-100{% endif %}">Dashboard</a>
+                    <a href="{% url 'create_meeting' %}" class="px-3 py-2 rounded hover:bg-blue-100 transition-all">Create Meeting</a>
+                {% else %}
+                    <a href="{% url 'student_dashboard' %}" class="px-3 py-2 rounded hover:bg-green-100 transition-all {% if request.path == '/support/student/' %}bg-green-100{% endif %}">Dashboard</a>
+                {% endif %}
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            {% if messages %}
+            <div class="mb-4 space-y-2">
+                {% for message in messages %}
+                    <div class="p-3 rounded {{ message.tags }} bg-yellow-100 text-yellow-800 fade-in">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

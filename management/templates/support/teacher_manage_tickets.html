@@ -1,0 +1,27 @@
+
+
+
+{% extends 'support/base.html' %}
+{% block title %}Manage Meeting Tickets{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="fade-in max-w-4xl mx-auto">
+  <h2 class="text-2xl font-semibold mb-4">Tickets for {{ meeting.title }} 
+    <input id="meeting_id" hidden type="text" value="{{ meeting.id }}">
+  <div id="ticket-list"></div>
+</div>
+
+{% block extra_js %}
+
+<script>
+  var currentMeetingId = document.getElementById("meeting_id").value;
+  // console.log(currentMeetingId);
+  fetchLiveQueue(currentMeetingId);
+</script>
+
+
+<script src="{% static 'support/js/live_queue.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

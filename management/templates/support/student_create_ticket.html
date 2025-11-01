@@ -1,0 +1,14 @@
+{% extends 'support/base.html' %}
+{% block title %}Create Ticket{% endblock %}
+
+{% block content %}
+<div class="fade-in max-w-2xl mx-auto bg-white p-6 rounded shadow">
+  <h2 class="text-xl font-bold mb-4">Create Ticket for {{ meeting.title }}</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <label class="block font-medium mb-2">Describe your problem</label>
+    <textarea name="problem_text" class="w-full border rounded p-2 mb-4" rows="4" required></textarea>
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Submit Ticket</button>
+  </form>
+</div>
+{% endblock %}
