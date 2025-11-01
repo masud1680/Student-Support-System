@@ -41,7 +41,7 @@ def RegisterView(request):
                 first_name=first_name,
                 last_name=last_name,
                 email=email, 
-                username=username,
+                username=email,
                 password=password
                 
             )
@@ -73,7 +73,7 @@ def LoginView(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        user = authenticate(request, email=username, password=password)
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
