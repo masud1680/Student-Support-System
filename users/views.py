@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.urls import reverse
 from .models import *
 from django.contrib.auth.tokens import default_token_generator
+from django.conf import settings
 
 
 def RegisterView(request):
@@ -16,15 +17,15 @@ def RegisterView(request):
     if request.method == "POST":
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
+        # username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
 
         user_data_has_error = False
 
-        if User.objects.filter(username=username).exists():
+        if User.objects.filter(username=email).exists():
             user_data_has_error = True
-            messages.error(request, "Username already exists")
+            messages.error(request, "Email already exists")
 
         if User.objects.filter(email=email).exists():
             user_data_has_error = True
@@ -105,7 +106,8 @@ def ForgotPassword(request):
 
             password_reset_url = reverse('reset-password', kwargs={'reset_id': new_password_reset.reset_id})
 
-            full_password_reset_url = f'{request.scheme}://{request.get_host()}{password_reset_url}'
+            # full_password_reset_url = f'{request.scheme}://{request.get_host()}{password_reset_url}'
+            full_password_reset_url = f'{settings.FONTEND_URL}{password_reset_url}'
 
             email_body = f'Reset your password using the link below:\n\n\n{full_password_reset_url}'
         
